@@ -6,7 +6,8 @@ module.exports = class DeleteChannels extends Command {
             name: 'deletechannels',
             group: 'channels',
             memberName: 'delete',
-            description: 'Deletes all subject channels. Requires the Manage Channels permission.',
+            description: 'Deletes all subject channels.',
+            details: 'Requires the Manage Channels permission.',
             guildOnly: true,
             userPermissions: [ 'MANAGE_CHANNELS' ]
         });

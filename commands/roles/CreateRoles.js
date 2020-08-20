@@ -7,7 +7,8 @@ module.exports = class CreateRoles extends Command {
             name: 'createroles',
             group: 'roles',
             memberName: 'create',
-            description: 'Finds existing roles for each subject and creates roles if they don\'t exist. Requires the Manage Roles permission. Use sparingly; repeated uses of this command have the potential to get Kisbee ratelimited.',
+            description: 'Finds existing roles for each subject and creates roles if they don\'t exist.',
+            details: 'Requires the Manage Channels permission. Use sparingly; repeated uses of this command have the potential to get Kisbee ratelimited.',
             guildOnly: true,
             userPermissions: [ 'MANAGE_ROLES' ],
             throttling: {
@@ -26,7 +27,7 @@ module.exports = class CreateRoles extends Command {
         let coloredSubjectPrefix = 'Advisory';
 
         roles = roles
-            .map(role => ({ ...role, name: role.name.replace(/\([0-9]*\)/g, '').trim() }))
+            .map(role => ({ ...role, name: role.name.replace(/\((sec(tion)? )?[0-9]*\)/g, '').trim() }))
             .filter(role => !disallowedSubjectNames.includes(role.name));
         
         if (existingRoles) roles = roles

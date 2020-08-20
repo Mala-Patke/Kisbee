@@ -6,7 +6,8 @@ module.exports = class DeleteRoles extends Command {
             name: 'deleteroles',
             group: 'roles',
             memberName: 'delete',
-            description: 'Deletes all subject roles. Requires the Manage Roles permission.',
+            description: 'Deletes all subject roles.',
+            details: 'Requires the Manage Channels permission.',
             guildOnly: true,
             userPermissions: [ 'MANAGE_ROLES' ]
         });

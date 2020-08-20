@@ -6,7 +6,8 @@ module.exports = class CreateChannels extends Command {
             name: 'createchannels',
             group: 'channels',
             memberName: 'create',
-            description: 'Finds existing channels for each subject and creates them if they don\'t exist. Only functions as intended after a successful `createroles`. Requires the Manage Channels permission. Use sparingly; repeated uses of this command have the potential to get Kisbee ratelimited.',
+            description: 'Finds existing channels for each subject and creates them if they don\'t exist.',
+            details: 'Requires the Manage Channels permission. Only functions as intended after a successful `createroles`. Use sparingly; repeated uses of this command have the potential to get Kisbee ratelimited.',
             guildOnly: true,
             userPermissions: [ 'MANAGE_CHANNELS' ],
             throttling: {

@@ -24,10 +24,9 @@ module.exports = class GetRoles extends Command {
             let username = (author.nickname || msg.author.username).toLowerCase();
             return [
                 `.*${first}.*`,
-                `.*${last}.*`,
-                `.*${first} *${last}.*`,
-                `.*${first.charAt(0)} *${last}.*`,
-                `.*${first} *${last.charAt(0)}.*`
+                `.*${first} ?${last}.*`,
+                `.*${first.charAt(0)} ?${last}.*`,
+                `.*${first} ?${last.charAt(0)}.*`
             ]
                 .map(pattern => new RegExp(pattern, 'gi'))
                 .some(pattern => pattern.test(username));
@@ -62,7 +61,11 @@ module.exports = class GetRoles extends Command {
         if (!roles)
             return msg.channel.send('No roles assigned. Contact a moderator.');
 
-        let newRoles = student.subjects.filter(s => s.id in roles).map(s => roles[s.id])
+        let newRoles = student.subjects
+            .filter(s => s.id in roles)
+            .map(s => roles[s.id])
+            .filter(r => msg.guild.roles.cache.has(r));
+        
         author.roles.add(newRoles);
         msg.channel.send(`Success! Assigned ${newRoles.length} roles.`);
     }
