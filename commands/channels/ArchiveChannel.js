@@ -8,13 +8,11 @@ module.exports = class ArchiveChannel extends Command {
             group: 'channels',
             memberName: 'archive',
             description: 'Archives a channel.',
-            guildOnly: true,
             args: [{
                 key: 'channel',
                 prompt: 'Please specify a channel to be archived.',
                 type: 'channel'
-            }],
-            userPermissions: [ 'MANAGE_CHANNELS' ]
+            }]
         });
     }
     

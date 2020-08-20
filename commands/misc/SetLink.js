@@ -9,8 +9,6 @@ module.exports = class SetLink extends Command {
             group: 'misc',
             memberName: 'setlink',
             description: 'Set helpful information.',
-            guildOnly: true,
-            userPermissions: [ 'MANAGE_MESSAGES' ],
             args: [
                 {
                     key: 'name',
@@ -27,10 +25,7 @@ module.exports = class SetLink extends Command {
     }
     
 	async run(msg, args) {
-        let time = { timeout: 30000 };
-        msg.suppressEmbeds();
         msg.guild.settings.set('links.' + args.name.toLowerCase(), args.value);
-        msg.channel.send(new MessageEmbed().addField(args.name, args.value)).delete(time);
-        msg.delete(time);
+        msg.channel.send(new MessageEmbed().addField(args.name, args.value));
 	}
 }

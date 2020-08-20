@@ -26,12 +26,9 @@ client.registry
     .registerGroups([
         ['roles', 'Role management'],
         ['channels', 'Channel management'],
-        ['misc', 'Miscellaneous'],
-        ['util', 'Utility']
+        ['misc', 'Miscellaneous']
     ])
-    .registerDefaultTypes()
-    .registerDefaultGroups()
-    .registerDefaultCommands({ help: false })
+    .registerDefaults()
     .registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.login(secret.client_tokens[secret.production ? 'production' : 'development']);

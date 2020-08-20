@@ -1,13 +1,14 @@
 const { Command, ArgumentCollector } = require('discord.js-commando');
+const { MessageEmbed } = require('discord.js');
 const primeTimeTable = require('../../api/primeTimeTable.js');
 
-module.exports = class GetRoles extends Command {
+module.exports = class GetSchedule extends Command {
     constructor(client) {
         super(client, {
-            name: 'getschedule',
+            name: 'getSchedule',
             group: 'misc',
             memberName: 'get',
-            description: 'Gives subject roles to whoever\'s calling it.',
+            description: 'Show\'s student their schedule',
             guildOnly: true
         });
     }
@@ -15,8 +16,12 @@ module.exports = class GetRoles extends Command {
     async run(msg, args) {
         msg.channel.send('Fetching student information, please wait...');
         let author = msg.member;
-        let roles = msg.guild.settings.get('subjectRoles');
+
         let students = (await primeTimeTable()).classes;
+        let periods = (await primeTimeTable()).periods;
+        let activities = (await primeTimeTable()).activities;
+        let days = (await primeTimeTable()).days;
+        let subjects = (await primeTimeTable()).subjects;
 
         let possibleStudents = students.filter(s => {
             let first = s.name.toLowerCase().split(' ')[0];
@@ -56,15 +61,28 @@ module.exports = class GetRoles extends Command {
             }
         } else {
             student = possibleStudents[0];
-            msg.channel.send(`You look like ${student.name}.`);
         }
-        msg.member.setNickname(student.name.split(" ")[0]);
-
-        if (!roles)
-            return msg.channel.send('No roles assigned. Contact a moderator.');
-
-        let newRoles = student.subjects.filter(s => s.id in roles).map(s => roles[s.id])
-        author.roles.add(newRoles);
-        msg.channel.send(`Success! Assigned ${newRoles.length} roles.`);
+        
+        let dotw = new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(Date.now());
+        dotw = days.find(day => day.name.toLowerCase() === dotw.toLowerCase()).id;
+        let studentactivities = activities
+            .filter(act => act.groupIds.includes(student.id)) //Array of activities with the student
+            .filter(act => !!act.cards.find(card => card.dayID === dotw))
+            .map(act => {return {subject: act.subjectId, period: act.cards[0].periodId}});
+        let schedule = [];
+        studentactivities.foreach(act => {
+            let time = periods.find(p => p.id === act.period).name.split(" ");
+            time = time.slice(time.length-1, time.length).join(" ");
+            let subject = subjects.find(sub => sub.id === act.subject);
+            schedule.push({
+                subject: subject,
+                time: time
+            })
+        })
+        
+        //This is where Aryan's code comes in, for now, take this temporary solution
+        const embed = new MessageEmbed().setTitle(`Hello ${student.name}. Here is your personal schedule for ${dotw}`);
+        schedule.forEach(sub => embed.addField(sub.subject, `**from ${sub.time}**`));
+        msg.channel.send(embed);
     }
 }
