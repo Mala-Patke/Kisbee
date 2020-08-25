@@ -14,14 +14,16 @@ module.exports = class GetRoles extends Command {
 
     async run(msg, args) {
         msg.channel.send('Fetching student information, please wait...');
-        let author = msg.guild.member(msg.author);
         let roles = msg.guild.settings.get('subjectRoles');
         let students = (await primetable()).classes;
+        
+        let author = msg.mentions.members.first();
+        if(!author) author = msg.member; 
 
         let possibleStudents = students.filter(s => {
             let first = s.name.toLowerCase().split(' ')[0];
             let last = s.name.toLowerCase().split(' ')[1];
-            let username = (author.nickname || msg.author.username).toLowerCase();
+            let username = (author.nickname || author.user.username).toLowerCase();
             return [
                 `.*${first}.*`,
                 `.*${first} ?${last}.*`,
