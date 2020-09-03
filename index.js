@@ -31,7 +31,7 @@ client.registry
     ])
     .registerDefaultTypes()
     .registerDefaultGroups()
-    .registerDefaultCommands({ help: false })
+    .registerDefaultCommands({ help: false, unknownCommand: false })
     .registerCommandsIn(path.join(__dirname, 'commands'));
 
 client.login(secret.client_tokens[secret.production ? 'production' : 'development']);
